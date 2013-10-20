@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Semantic Network</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
+    <!-- <script type="text/javascript" src="Scripts/modernizr-2.6.2.js"></script> -->
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+    <script type="text/javascript" src="Scripts/TemplateObjects.js"></script>
+    <script type="text/javascript" src="Scripts/SemanticNetworkView.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.css" />
+</head>
+<body>
+    <div id="divNoLocalStorage">
+        HTML5 Local Storage Not Supported, please try a different browser
+    </div>
+    
+    <!--Store page Id so we know our current context-->
+    <input id="pageId" type="hidden" />
+
+    <div id="pageContainer">
+        <div data-role="page" id="ContentPage">
+            <div id="divHeader" data-role="header">
+                <h1 id="pageTitle"></h1>
+                <a id="btnHome" href="Home" data-icon="home" class="ui-btn-right">Home</a>
+            </div>
+            <div data-role="content">
+                <ul id="itemList" data-role="listview" data-inset="true" data-theme="a">
+                    <!-- List items go here -->                    
+                </ul>
+
+                <div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-content-theme="c">
+                    <h3>Add Item</h3>
+                    <div data-content-theme="c">
+                        <input type="text" id="txtAdd" />
+                        <button id="btnAdd" type="button" data-theme="a">Add Element</button>
+                    </div>
+                </div>
+
+                <div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-content-theme="c">
+                    <h3>Move Item</h3>
+                    <div id="divMove">
+                        <h3>From</h3>
+                        <select id="ddlFrom"></select>
+                        <h3>To</h3>
+                        <select id="ddlTo"></select>
+                        <button id="btnMove" type="button" data-theme="a">Move Element</button>
+                    </div>
+                </div>
+
+                <div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-content-theme="c">
+                    <h3>Rename Item</h3>
+                    <div id="divRename">
+                        <h3>Rename</h3>
+                        <select id="ddlRename"></select>
+                        <h3>To</h3>
+                        <input type="text" id="txtRename" />
+                        <button id="btnRename" type="button" data-theme="a">Rename Selected Element</button>
+                    </div>
+                </div>
+
+                <div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-content-theme="c">
+                    <h3>Delete Item</h3>
+                    <div id="divDelete">
+                        <h3>Delete From</h3>
+                        <select id="ddlDeleteFrom"></select>
+                        <button id="btnDelete" type="button" data-theme="a">Delete Selected Element</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        // TODO:
+        // - implement rename functionality
+        // - implement datetime | GUID creation of Ids to circumvent collisions
+        // - implement bread crumb
+        // - implement move item "up one" functionality
+        // - implement previous page functionality
+        // - implement safer handling for user interaction - app still allows clicking when nothing is selected
+        // - persistent storage :-)
+
+        // !!DONE!!
+        // - Proper implementation of HTML5 local storage (one storage element per view)
+        // - Persist Add element
+        // - Redraw list
+        // - Populate from ddl
+        // - Populate to ddl
+        // - Move Element functionality
+        // - Navigation
+        // - Redraw list on "navigation"
+        // - Switch to delegated events using "on"
+        // - RePopulate from/to ddl upon navigation completion
+        // - Sub-children count
+        // - DDLs should have a first blank element
+        // - ensure adding blanks not allowed
+        // - UI hiding for actions
+        // - implement delete functionality
+
+        $(document).ready(function () {
+            InitialPageLoad();
+        });
+
+    </script>
+
+</body>
+</html>
