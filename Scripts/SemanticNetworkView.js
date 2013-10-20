@@ -73,6 +73,7 @@ function LoadItems(pageId) {
     PopulateFromDropDownList();
     PopulateDeleteDropDownList(page.id);
     PopulateRenameDropDownList();
+    PopulateMoveUpOneDropDownList();
 
     //Refresh list 
     $('#itemList').listview('refresh');
@@ -82,6 +83,7 @@ function WireUpEvents() {
 
     $("#btnHome").on("click", Navigate);
     $("#btnMove").on("click", ElementMove);
+    $("#btnUpOne").on("click", ElementMoveUp);
     $("#btnAdd").on("click", ElementAdd);
     $("#btnDelete").on("click", ElementDelete);
     $("#btnRename").on("click", ElementRename);
@@ -141,36 +143,40 @@ function AddTextElementToPage(pageId, textToAdd) {
     StorePage(page, pageId);
 }
 
-function MoveElement(from, to, currentPageId) {
+////
+// from - text of item to move
+// to - text of page to move to or Id of the page to move to
+////
+function MoveElement(from, to) {
 
     var pageId = $("#pageId").val();
     var fromPage = GetPageFromStorage(pageId);
-    var toPageId = null;
     var toPage = null;
     var itemToMove;
 
-    for (var i = 0; i < fromPage.items.length; i++) {
+    //attempt to retrieve the page
+    toPage = GetPageFromStorage(to);
+
+    //While we don't have a page, look for it in the fromPage - this gets skipped for moving the item elsewhere
+    for (var i = 0; i < fromPage.items.length && toPage === null; i++) {
 
         if (fromPage.items[i].text === to) {
-            toPageId = fromPage.items[i].id;
-        }
-    }
 
-    if (toPageId !== null) {
-        toPage = GetPageFromStorage(toPageId);
+            toPage = GetPageFromStorage(fromPage.items[i].id);
+
+            //if still null, it's not a sub page yet, promote it
+            if (toPage === null) {
+
+                //link up with current element on page so we can link
+                fromPage.PromoteToPage(to);
+
+                toPage = new ItemPage(to, to);
+            }
+        }
     }
 
     //Pull item from the source page
     itemToMove = fromPage.RemoveItem(from);
-
-    //if not found, it's not a sub page yet
-    if (toPage === null) {
-
-        //link up with current element on page so we can link
-        fromPage.PromoteToPage(to);
-
-        toPage = new ItemPage(to, to);
-    }
 
     //Insert it into the destination page
     toPage.AddItem(itemToMove);
@@ -208,6 +214,45 @@ function ElementAdd() {
     LoadItems(pageId);
 }
 
+function ElementMoveUp(event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    var fromPageId = $("#pageId").val();
+    var fromDdl = $("#ddlUpOne");
+    var fromSelected = $(fromDdl).val();
+
+    var toPageId = GetIdContainingItem("Home", fromPageId);
+
+    MoveElement(fromSelected.trim(), toPageId);
+
+    //load page
+    LoadItems(fromPageId);
+}
+
+function GetIdContainingItem(startingId, idToSearchFor) {
+
+    var page = GetPageFromStorage(startingId);
+    var containingPageId = null;
+
+    for (var i = 0; i < page.items.length && containingPageId === null; i++) {
+
+        //For now, only allow deletion of items that don't have children
+        if (page.items[i].id !== undefined && page.items[i].id !== null) {
+
+            if (page.items[i].id === idToSearchFor) {
+                containingPageId = page.id;
+            } else {
+                //recurse to see if we've found it
+                containingPageId = GetIdContainingItem(page.items[i].id, idToSearchFor);
+            }
+        }
+    }
+    
+    return containingPageId;
+}
+
 function ElementMove(event) {
 
     event.preventDefault();
@@ -220,7 +265,7 @@ function ElementMove(event) {
     var fromSelected = $(fromDdl).val();
     var toSelected = $(toDdl).val();
 
-    MoveElement(fromSelected.trim(), toSelected.trim(), pageId);
+    MoveElement(fromSelected.trim(), toSelected.trim());
 
     //load page
     LoadItems(pageId);
@@ -320,9 +365,16 @@ function PopulateFromDropDownList() {
 
 function PopulateRenameDropDownList() {
 
-    var ddlRename = $("#ddlRename")
+    var ddlRename = $("#ddlRename");
 
     PopulateDropDownWithItemsFromList(ddlRename);
+}
+
+function PopulateMoveUpOneDropDownList() {
+
+    var ddlUpOne = $("#ddlUpOne");
+
+    PopulateDropDownWithItemsFromList(ddlUpOne);
 }
 
 function PopulateSecondList(event) {
