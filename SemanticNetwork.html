@@ -21,6 +21,7 @@
     <div id="pageContainer">
         <div data-role="page" id="ContentPage">
             <div id="divHeader" data-role="header">
+                <a id="btnNavUpOneLevel" data-icon="back" data-role="button">Go Up One Level</a>
                 <h1 id="pageTitle"></h1>
                 <a id="btnHome" href="Home" data-icon="home" class="ui-btn-right">Home</a>
             </div>
@@ -61,12 +62,14 @@
                         </div>
                     </div>
 
-                    <div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-content-theme="c">
-                        <h3>Move Item Up One Level</h3>
-                        <div id="divUpOne">
+                    <div id="divMoveItemUpOne">
+                        <div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-content-theme="c">
                             <h3>Move Item Up One Level</h3>
-                            <select id="ddlUpOne"></select>
-                            <button id="btnUpOne" type="button" data-theme="a">Move Selected Element Up One Level</button>
+                            <div id="divUpOne">
+                                <h3>Move Item Up One Level</h3>
+                                <select id="ddlUpOne"></select>
+                                <button id="btnUpOne" type="button" data-theme="a">Move Selected Element Up One Level</button>
+                            </div>
                         </div>
                     </div>
 
@@ -87,15 +90,15 @@
     <script type="text/javascript">
 
         // TODO:
-        // - implement rename functionality
         // - implement datetime | GUID creation of Ids to circumvent collisions
         // - implement bread crumb
-        // - implement previous page functionality
         // - implement safer handling for user interaction - app still allows clicking when nothing is selected
         // - persistent storage :-)
 
         // !!DONE!!
+        // - implement navigate "up one level" functionality
         // - implement move item "up one" functionality
+        // - implement rename functionality
         // - Proper implementation of HTML5 local storage (one storage element per view)
         // - Persist Add element
         // - Redraw list

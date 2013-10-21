@@ -75,6 +75,15 @@ function LoadItems(pageId) {
     PopulateRenameDropDownList();
     PopulateMoveUpOneDropDownList();
 
+    //Toggle visibility for items that shouldn't show on the first screen
+    if (pageId == "Home") {
+        $("#btnNavUpOneLevel").hide();
+        $("#divMoveItemUpOne").hide();
+    } else {
+        $("#btnNavUpOneLevel").show();
+        $("#divMoveItemUpOne").show();
+    }
+
     //Refresh list 
     $('#itemList').listview('refresh');
 }
@@ -87,6 +96,7 @@ function WireUpEvents() {
     $("#btnAdd").on("click", ElementAdd);
     $("#btnDelete").on("click", ElementDelete);
     $("#btnRename").on("click", ElementRename);
+    $("#btnNavUpOneLevel").on("click", NavigateUpOneLevel);
 
     //Change event on the from drop down list
     $("#divMove").on("change", "#ddlFrom", PopulateSecondList);
@@ -130,6 +140,17 @@ function Navigate(event) {
 
     var anchor = this;
     var pageIdToNavigateTo = $(anchor).attr("href");
+
+    LoadItems(pageIdToNavigateTo);
+}
+
+function NavigateUpOneLevel(event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    var pageId = $("#pageId").val();
+    var pageIdToNavigateTo = GetIdContainingItem("Home", pageId);
 
     LoadItems(pageIdToNavigateTo);
 }
